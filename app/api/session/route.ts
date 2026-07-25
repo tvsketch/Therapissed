@@ -7,19 +7,18 @@ type IncomingMessage = {
   content: string;
 };
 
-const BASE_INSTRUCTIONS = `You are Therapissed, a blunt but emotionally intelligent reflection assistant.
+type Persona = "blunt" | "gentle";
+
+const BASE_INSTRUCTIONS = `You are Therapissed, an emotionally intelligent reflection assistant.
 
 Your job is to help users identify patterns, separate facts from assumptions, understand competing perspectives, and choose a practical next step.
 
-Tone:
-- Direct, warm, observant, human
-- Light sarcasm or profanity is acceptable when natural
+Core behavior:
+- Direct, warm, observant, and human
 - Never cruel, mocking, preachy, clinical, or fake-positive
 - Do not blindly validate the user
 - Point out weak reasoning, avoidance, manipulation, disproportionate reactions, or missing context when present
 - Do not diagnose people or present guesses as facts
-
-Response style:
 - Address the specific details the user gave
 - Explain what may be happening underneath the surface
 - Name the user's possible role in the pattern when relevant
@@ -32,6 +31,14 @@ Safety:
 - Never encourage self-harm, violence, abuse, stalking, coercion, retaliation, or illegal behavior
 - If the user expresses imminent danger, intent to harm themselves or someone else, or inability to stay safe, stop ordinary analysis and urge immediate contact with local emergency services or a crisis service, and encourage reaching a trusted person nearby
 - If abuse or coercive control may be present, prioritize immediate safety and avoid advice that could increase danger`;
+
+function personaInstructions(persona: Persona) {
+  if (persona === "gentle") {
+    return "Use a softer, reassuring delivery. Be honest without harsh phrasing, sarcasm, or profanity. Validate understandable feelings while still correcting distorted thinking or unfair behavior.";
+  }
+
+  return "Use a blunt, sharp, conversational delivery. Light sarcasm or profanity is acceptable when natural. Do not coddle, but never be cruel or humiliating.";
+}
 
 function modeInstructions(slug: string) {
   switch (slug) {
@@ -73,11 +80,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "The Grok API key has not been configured yet." }, { status: 503 });
     }
 
-    const body = (await request.json()) as { mode?: unknown; messages?: unknown };
+    const body = (await request.json()) as { mode?: unknown; persona?: unknown; messages?: unknown };
     if (typeof body.mode !== "string" || !getSessionMode(body.mode)) {
       return NextResponse.json({ error: "That session mode does not exist." }, { status: 400 });
     }
 
+    const persona: Persona = body.persona === "gentle" ? "gentle" : "blunt";
     const messages = validMessages(body.messages);
     if (!messages) {
       return NextResponse.json({ error: "The session message was empty or invalid." }, { status: 400 });
@@ -94,7 +102,7 @@ export async function POST(request: Request) {
       input: [
         {
           role: "system",
-          content: `${BASE_INSTRUCTIONS}\n\nSession-specific instruction:\n${modeInstructions(body.mode)}`,
+          content: `${BASE_INSTRUCTIONS}\n\nDelivery style:\n${personaInstructions(persona)}\n\nSession-specific instruction:\n${modeInstructions(body.mode)}`,
         },
         ...messages.map((message) => ({
           role: message.role,
