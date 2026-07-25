@@ -15,36 +15,23 @@ export default function HomePage() {
         </span>
       </header>
 
-      <section className="grid gap-10 py-14 lg:grid-cols-[1.08fr_.92fr] lg:items-center lg:py-24">
-        <div>
-          <p className="mb-4 text-sm font-bold uppercase tracking-[0.22em] text-[var(--acid)]">
-            Emotional clarity without the beige bullshit
-          </p>
-          <h1 className="max-w-4xl text-5xl font-black leading-[0.96] tracking-[-0.05em] sm:text-7xl">
-            Get honest about what is actually going on.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)] sm:text-xl">
-            Vent, decode a fight, check your reaction, or figure out what to say next. Therapissed helps you find the pattern without coddling you or turning every inconvenience into a diagnosis.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/session/solo" className="inline-flex items-center gap-2 rounded-full bg-[var(--acid)] px-6 py-3 font-black text-black transition hover:-translate-y-0.5">
-              Start a session <ArrowUpRight size={18} />
-            </Link>
-            <a href="#modes" className="inline-flex items-center rounded-full border border-[var(--line)] px-6 py-3 font-bold text-[var(--foreground)] transition hover:bg-[var(--surface)]">
-              Pick the right flavor of chaos
-            </a>
-          </div>
-        </div>
-
-        <div className="relative mx-auto w-full max-w-md">
-          <div className="absolute -inset-3 rotate-2 rounded-[2rem] bg-[var(--acid)]/20 blur-xl" />
-          <div className="relative overflow-hidden rounded-[2rem] border border-[var(--line)] bg-[var(--surface)] shadow-2xl shadow-black/40">
-            <Image src="/tori-hero.webp" alt="Therapissed founder smiling in a mirror selfie" width={360} height={450} priority className="h-auto w-full object-cover" />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/70 to-transparent p-6 pt-20">
-              <p className="text-3xl font-black lowercase tracking-tight">therapissed<span className="text-[var(--pink)]">.</span></p>
-              <p className="mt-2 max-w-sm text-sm leading-6 text-white/75">Built by someone who also hates being told to “just breathe” like that fixes the entire damn situation.</p>
-            </div>
-          </div>
+      <section className="py-16 lg:py-28">
+        <p className="mb-4 text-sm font-bold uppercase tracking-[0.22em] text-[var(--acid)]">
+          Emotional clarity without the beige bullshit
+        </p>
+        <h1 className="max-w-5xl text-5xl font-black leading-[0.96] tracking-[-0.05em] sm:text-7xl lg:text-8xl">
+          Get honest about what is actually going on.
+        </h1>
+        <p className="mt-7 max-w-3xl text-lg leading-8 text-[var(--muted)] sm:text-xl">
+          Vent, decode a fight, check your reaction, or figure out what to say next. Therapissed helps you find the pattern without coddling you or turning every inconvenience into a diagnosis.
+        </p>
+        <div className="mt-9 flex flex-wrap gap-3">
+          <Link href="/session/solo" className="inline-flex items-center gap-2 rounded-full bg-[var(--acid)] px-6 py-3 font-black text-black transition hover:-translate-y-0.5">
+            Start a session <ArrowUpRight size={18} />
+          </Link>
+          <a href="#modes" className="inline-flex items-center rounded-full border border-[var(--line)] px-6 py-3 font-bold text-[var(--foreground)] transition hover:bg-[var(--surface)]">
+            Pick the right flavor of chaos
+          </a>
         </div>
       </section>
 
@@ -78,6 +65,28 @@ export default function HomePage() {
               <span className="mt-auto inline-flex items-center gap-2 pt-6 font-black text-[var(--acid)]">Open session <ArrowUpRight className="transition group-hover:translate-x-1" size={17} /></span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="mt-20 grid overflow-hidden rounded-[2rem] border border-[var(--line)] bg-[var(--surface)] md:grid-cols-[260px_1fr]">
+        <div className="relative min-h-80 md:min-h-full">
+          <Image
+            src="/tori-hero.webp"
+            alt="Therapissed creator smiling in a mirror selfie"
+            fill
+            sizes="(max-width: 768px) 100vw, 260px"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent md:bg-gradient-to-r" />
+        </div>
+        <div className="flex flex-col justify-center p-7 sm:p-10">
+          <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--pink)]">Built by an actual human</p>
+          <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+            Hi, I’m Tori. I got tired of advice that sounded like a scented candle.
+          </h2>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--muted)]">
+            Therapissed exists for people who want emotional insight without the corporate wellness voice, blind validation, or being told to “just breathe” like that fixes the entire damn situation.
+          </p>
         </div>
       </section>
 
