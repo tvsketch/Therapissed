@@ -69,8 +69,8 @@ function validMessages(value: unknown): IncomingMessage[] | null {
 
 export async function POST(request: Request) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ error: "The AI key has not been configured yet." }, { status: 503 });
+    if (!process.env.XAI_API_KEY) {
+      return NextResponse.json({ error: "The Grok API key has not been configured yet." }, { status: 503 });
     }
 
     const body = (await request.json()) as { mode?: unknown; messages?: unknown };
@@ -83,20 +83,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "The session message was empty or invalid." }, { status: 400 });
     }
 
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const client = new OpenAI({
+      apiKey: process.env.XAI_API_KEY,
+      baseURL: "https://api.x.ai/v1",
+      timeout: 120_000,
+    });
+
     const response = await client.responses.create({
-      model: process.env.OPENAI_MODEL || "gpt-5-mini",
-      instructions: `${BASE_INSTRUCTIONS}\n\nSession-specific instruction:\n${modeInstructions(body.mode)}`,
-      input: messages.map((message) => ({
-        role: message.role,
-        content: message.content,
-      })),
+      model: process.env.XAI_MODEL || "grok-4.3",
+      input: [
+        {
+          role: "system",
+          content: `${BASE_INSTRUCTIONS}\n\nSession-specific instruction:\n${modeInstructions(body.mode)}`,
+        },
+        ...messages.map((message) => ({
+          role: message.role,
+          content: message.content,
+        })),
+      ],
       max_output_tokens: 900,
+      store: false,
     });
 
     const message = response.output_text?.trim();
     if (!message) {
-      return NextResponse.json({ error: "The AI returned an empty response. Try again." }, { status: 502 });
+      return NextResponse.json({ error: "Grok returned an empty response. Try again." }, { status: 502 });
     }
 
     return NextResponse.json({ message });
