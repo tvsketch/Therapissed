@@ -26,8 +26,12 @@ export default function HomePage() {
           Vent, decode a fight, check your reaction, or figure out what to say next. Therapissed helps you find the pattern without coddling you or turning every inconvenience into a diagnosis.
         </p>
         <div className="mt-9 flex flex-wrap gap-3">
-          <Link href="/session/solo" className="inline-flex items-center gap-2 rounded-full bg-[var(--acid)] px-6 py-3 font-black text-black transition hover:-translate-y-0.5">
-            Start a session <ArrowUpRight size={18} />
+          <Link
+            href="/session/solo"
+            className="inline-flex items-center gap-2 rounded-full border border-black/70 bg-[var(--acid)] px-6 py-3 font-black transition hover:-translate-y-0.5"
+            style={{ color: "#080808", textShadow: "0 1px 0 rgba(255,255,255,0.2)" }}
+          >
+            Start a session <ArrowUpRight size={18} strokeWidth={3} />
           </Link>
           <a href="#modes" className="inline-flex items-center rounded-full border border-[var(--line)] px-6 py-3 font-bold text-[var(--foreground)] transition hover:bg-[var(--surface)]">
             Pick the right flavor of chaos
