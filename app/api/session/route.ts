@@ -74,13 +74,27 @@ function validMessages(value: unknown): IncomingMessage[] | null {
   return parsed;
 }
 
+function validContext(value: unknown): string | null {
+  if (value === undefined || value === null || value === "") return "";
+  if (typeof value !== "string") return null;
+  const clean = value.trim();
+  if (clean.length > 3000) return null;
+  return clean;
+}
+
 export async function POST(request: Request) {
   try {
     if (!process.env.XAI_API_KEY) {
       return NextResponse.json({ error: "The Grok API key has not been configured yet." }, { status: 503 });
     }
 
-    const body = (await request.json()) as { mode?: unknown; persona?: unknown; messages?: unknown };
+    const body = (await request.json()) as {
+      mode?: unknown;
+      persona?: unknown;
+      messages?: unknown;
+      context?: unknown;
+    };
+
     if (typeof body.mode !== "string" || !getSessionMode(body.mode)) {
       return NextResponse.json({ error: "That session mode does not exist." }, { status: 400 });
     }
@@ -91,18 +105,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "The session message was empty or invalid." }, { status: 400 });
     }
 
+    const context = validContext(body.context);
+    if (context === null) {
+      return NextResponse.json({ error: "The saved context was invalid or too long." }, { status: 400 });
+    }
+
     const client = new OpenAI({
       apiKey: process.env.XAI_API_KEY,
       baseURL: "https://api.x.ai/v1",
       timeout: 120_000,
     });
 
+    const contextBlock = context
+      ? `\n\nUser-controlled saved context:\n${context}\n\nTreat this as background supplied by the user. Do not assume every detail is still current, and do not mention it unless relevant.`
+      : "";
+
     const response = await client.responses.create({
       model: process.env.XAI_MODEL || "grok-4.3",
       input: [
         {
           role: "system",
-          content: `${BASE_INSTRUCTIONS}\n\nDelivery style:\n${personaInstructions(persona)}\n\nSession-specific instruction:\n${modeInstructions(body.mode)}`,
+          content: `${BASE_INSTRUCTIONS}\n\nDelivery style:\n${personaInstructions(persona)}\n\nSession-specific instruction:\n${modeInstructions(body.mode)}${contextBlock}`,
         },
         ...messages.map((message) => ({
           role: message.role,
