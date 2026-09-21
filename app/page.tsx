@@ -94,8 +94,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="mt-16 border-t border-[var(--line)] pt-6 text-sm leading-6 text-[var(--muted)]">
-        therapissed. is for reflection and emotional support, not professional medical care or crisis intervention. In an immediate emergency, contact local emergency services.
+      <section className="mt-6 rounded-3xl border border-[var(--line)] bg-black/10 p-5 sm:p-6">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--acid)]">Privacy, in human words</p>
+        <p className="mt-2 max-w-3xl leading-7 text-[var(--muted)]">
+          Session history and optional saved context stay in this browser. When you hit Send, the text needed for the response is sent to the model provider for processing. No account is required.
+        </p>
+        <Link href="/privacy" className="mt-3 inline-flex items-center gap-2 font-black text-[var(--foreground)] underline decoration-[var(--line)] underline-offset-4">
+          See exactly how data works <ArrowUpRight size={16} />
+        </Link>
+      </section>
+
+      <footer className="mt-12 border-t border-[var(--line)] pt-6 text-sm leading-6 text-[var(--muted)]">
+        <p>therapissed. is for reflection and emotional support, not professional medical care or crisis intervention. In an immediate emergency, contact local emergency services.</p>
+        <Link href="/privacy" className="mt-2 inline-block font-bold text-[var(--foreground)] underline decoration-[var(--line)] underline-offset-4">
+          Privacy & data
+        </Link>
       </footer>
     </main>
   );
